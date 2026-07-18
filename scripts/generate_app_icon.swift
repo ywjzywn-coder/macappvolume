@@ -27,8 +27,8 @@ func drawIcon() -> NSImage {
     NSGraphicsContext.current?.restoreGraphicsState()
 
     NSGradient(colors: [
-        NSColor(calibratedRed: 0.30, green: 0.68, blue: 1.00, alpha: 1),
-        NSColor(calibratedRed: 0.08, green: 0.38, blue: 0.88, alpha: 1),
+        NSColor(calibratedRed: 0.38, green: 0.72, blue: 1.00, alpha: 1),
+        NSColor(calibratedRed: 0.08, green: 0.40, blue: 0.90, alpha: 1),
     ])!.draw(in: tilePath, angle: 90)
 
     NSColor(calibratedWhite: 1, alpha: 0.24).setStroke()
@@ -36,58 +36,24 @@ func drawIcon() -> NSImage {
     tileHighlight.lineWidth = 5
     tileHighlight.stroke()
 
-    let panelRect = NSRect(x: 202, y: 218, width: 620, height: 610)
-    let panelPath = roundedRect(panelRect, radius: 112)
-    let panelShadow = NSShadow()
-    panelShadow.shadowColor = NSColor(calibratedRed: 0.01, green: 0.12, blue: 0.32, alpha: 0.30)
-    panelShadow.shadowBlurRadius = 30
-    panelShadow.shadowOffset = NSSize(width: 0, height: -16)
-    NSGraphicsContext.current?.saveGraphicsState()
-    panelShadow.set()
-    NSColor(calibratedWhite: 0.98, alpha: 0.96).setFill()
-    panelPath.fill()
-    NSGraphicsContext.current?.restoreGraphicsState()
-
-    NSGradient(colors: [
-        NSColor(calibratedWhite: 1, alpha: 0.98),
-        NSColor(calibratedRed: 0.89, green: 0.94, blue: 0.99, alpha: 0.98),
-    ])!.draw(in: panelPath, angle: 90)
-
-    NSColor(calibratedWhite: 1, alpha: 0.86).setStroke()
-    panelPath.lineWidth = 4
-    panelPath.stroke()
-
-    let trackColor = NSColor(calibratedRed: 0.64, green: 0.70, blue: 0.78, alpha: 1)
-    let activeColor = NSColor(calibratedRed: 0.08, green: 0.46, blue: 0.94, alpha: 1)
-    let tracks: [(x: CGFloat, knobY: CGFloat)] = [
-        (350, 570),
-        (512, 440),
-        (674, 625),
-    ]
-
-    for track in tracks {
-        trackColor.setFill()
-        roundedRect(NSRect(x: track.x - 9, y: 310, width: 18, height: 420), radius: 9).fill()
-
-        activeColor.setFill()
-        roundedRect(NSRect(x: track.x - 9, y: 310, width: 18, height: track.knobY - 310), radius: 9).fill()
-
-        let knobRect = NSRect(x: track.x - 43, y: track.knobY - 43, width: 86, height: 86)
-        let knob = NSBezierPath(ovalIn: knobRect)
-        let knobShadow = NSShadow()
-        knobShadow.shadowColor = NSColor(calibratedWhite: 0, alpha: 0.24)
-        knobShadow.shadowBlurRadius = 12
-        knobShadow.shadowOffset = NSSize(width: 0, height: -5)
-        NSGraphicsContext.current?.saveGraphicsState()
-        knobShadow.set()
-        NSColor.white.setFill()
-        knob.fill()
-        NSGraphicsContext.current?.restoreGraphicsState()
-
-        NSColor(calibratedRed: 0.76, green: 0.82, blue: 0.89, alpha: 1).setStroke()
-        knob.lineWidth = 3
-        knob.stroke()
+    let symbolConfig = NSImage.SymbolConfiguration(pointSize: 470, weight: .medium)
+        .applying(NSImage.SymbolConfiguration(hierarchicalColor: .white))
+    guard let speaker = NSImage(
+        systemSymbolName: "speaker.wave.2.fill",
+        accessibilityDescription: nil
+    )?.withSymbolConfiguration(symbolConfig) else {
+        fatalError("Unable to load speaker symbol")
     }
+
+    let symbolRect = NSRect(x: 244, y: 276, width: 536, height: 536)
+    let symbolShadow = NSShadow()
+    symbolShadow.shadowColor = NSColor(calibratedRed: 0.01, green: 0.18, blue: 0.48, alpha: 0.32)
+    symbolShadow.shadowBlurRadius = 18
+    symbolShadow.shadowOffset = NSSize(width: 0, height: -10)
+    NSGraphicsContext.current?.saveGraphicsState()
+    symbolShadow.set()
+    speaker.draw(in: symbolRect, from: .zero, operation: .sourceOver, fraction: 1)
+    NSGraphicsContext.current?.restoreGraphicsState()
 
     image.unlockFocus()
     return image
