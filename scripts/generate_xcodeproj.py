@@ -410,6 +410,8 @@ for cfg_id, name in ((debug_target, "Debug"), (release_target, "Release")):
     lines.append("\t\t\tisa = XCBuildConfiguration;")
     lines.append("\t\t\tbuildSettings = {")
     lines.append(target_settings)
+    if name == "Debug":
+        lines.append("\t\t\t\tENABLE_TESTABILITY = YES;")
     lines.append("\t\t\t};")
     lines.append(f"\t\t\tname = {name};")
     lines.append("\t\t};")

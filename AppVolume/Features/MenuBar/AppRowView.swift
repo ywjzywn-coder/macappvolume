@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct AppRowView: View {
@@ -5,7 +6,7 @@ struct AppRowView: View {
     let app: AudioApp
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             appIcon
 
             VStack(alignment: .leading, spacing: 0) {
@@ -13,11 +14,11 @@ struct AppRowView: View {
                     .font(.system(size: 12, weight: .medium))
                     .lineLimit(1)
                 Text(statusLine)
-                    .font(.system(size: 9))
+                    .font(.caption2)
                     .foregroundStyle(statusColor)
                     .lineLimit(1)
             }
-            .frame(width: 88, alignment: .leading)
+            .frame(width: 106, alignment: .leading)
 
             Slider(
                 value: Binding(
@@ -32,7 +33,7 @@ struct AppRowView: View {
             Text("\(Int((store.volume(for: app) * 100).rounded()))%")
                 .font(.system(size: 10, design: .monospaced))
                 .foregroundStyle(.secondary)
-                .frame(width: 28, alignment: .trailing)
+                .frame(width: 31, alignment: .trailing)
 
             Button {
                 store.setMuted(!store.isMuted(for: app), for: app)
@@ -41,19 +42,27 @@ struct AppRowView: View {
                     .font(.system(size: 11))
             }
             .buttonStyle(.borderless)
+            .frame(width: 20, height: 20)
+            .help(store.isMuted(for: app) ? "取消静音" : "静音")
 
-            if store.volume(for: app) < 0.999 || store.isMuted(for: app) {
-                Button {
-                    store.resetApp(app)
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.system(size: 9))
+            Group {
+                if store.volume(for: app) < 0.999 || store.isMuted(for: app) {
+                    Button {
+                        store.resetApp(app)
+                    } label: {
+                        Image(systemName: "arrow.counterclockwise")
+                            .font(.system(size: 10))
+                    }
+                    .buttonStyle(.borderless)
+                    .help("恢复默认")
+                } else {
+                    Color.clear
                 }
-                .buttonStyle(.borderless)
             }
+            .frame(width: 20, height: 20)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 3)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 5)
         .opacity(store.isMuted(for: app) ? 0.6 : 1)
         .contextMenu {
             Button(store.isMuted(for: app) ? "取消静音" : "静音") {
@@ -95,15 +104,12 @@ struct AppRowView: View {
             Image(nsImage: icon)
                 .resizable()
                 .interpolation(.high)
-                .frame(width: 18, height: 18)
-                .cornerRadius(4)
+                .frame(width: 24, height: 24)
         } else {
             Image(systemName: "app.fill")
-                .frame(width: 18, height: 18)
-                .font(.system(size: 12))
+                .frame(width: 24, height: 24)
+                .font(.system(size: 15))
                 .foregroundStyle(.secondary)
         }
     }
 }
-
-import AppKit

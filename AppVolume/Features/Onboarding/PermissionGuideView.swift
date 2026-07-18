@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct PermissionGuideView: View {
+    @Environment(\.dismiss) private var dismiss
     var onOpenSettings: () -> Void = { ScreenCapturePermission.openSystemSettings() }
     var onRetry: () -> Void = {}
 
@@ -35,7 +36,7 @@ struct PermissionGuideView: View {
 
                 Spacer()
 
-                Button("稍后") {}
+                Button("稍后") { dismiss() }
                     .keyboardShortcut(.cancelAction)
             }
             .padding(.top, 4)

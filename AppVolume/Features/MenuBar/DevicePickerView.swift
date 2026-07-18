@@ -4,9 +4,14 @@ struct DevicePickerView: View {
     @Environment(AudioSessionStore.self) private var store
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
+        VStack(alignment: .leading, spacing: 7) {
+            Text("音频设备")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
             deviceSection(
-                title: "输出设备",
+                title: "输出",
+                systemImage: "speaker.wave.2",
                 devices: store.outputDevices,
                 emptyText: "未找到输出设备",
                 selection: Binding(
@@ -20,7 +25,8 @@ struct DevicePickerView: View {
             )
 
             deviceSection(
-                title: "输入设备",
+                title: "输入",
+                systemImage: "mic",
                 devices: store.inputDevices,
                 emptyText: "未找到输入设备",
                 selection: Binding(
@@ -33,26 +39,30 @@ struct DevicePickerView: View {
                 )
             )
         }
+        .padding(.horizontal, 12)
         .padding(.vertical, 8)
     }
 
     private func deviceSection(
         title: String,
+        systemImage: String,
         devices: [AudioDevice],
         emptyText: String,
         selection: Binding<AudioObjectID>
     ) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(title)
-                .font(.caption)
+        HStack(spacing: 8) {
+            Image(systemName: systemImage)
                 .foregroundStyle(.secondary)
-                .padding(.horizontal, 12)
+                .frame(width: 16)
+
+            Text(title)
+                .font(.callout)
+                .frame(width: 34, alignment: .leading)
 
             if devices.isEmpty {
                 Text(emptyText)
                     .font(.callout)
                     .foregroundStyle(.secondary)
-                    .padding(.horizontal, 12)
             } else {
                 Picker(title, selection: selection) {
                     ForEach(devices) { device in
@@ -62,7 +72,7 @@ struct DevicePickerView: View {
                 }
                 .labelsHidden()
                 .pickerStyle(.menu)
-                .padding(.horizontal, 12)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
     }

@@ -15,8 +15,7 @@ struct MenuBarView: View {
             Divider()
             footer
         }
-        .frame(width: 360)
-        .padding(.vertical, 6)
+        .frame(width: 400)
         .sheet(isPresented: Binding(
             get: { store.showPermissionSheet },
             set: { store.showPermissionSheet = $0 }
@@ -29,44 +28,60 @@ struct MenuBarView: View {
     }
 
     private var header: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 10) {
             Image(systemName: store.menuBarSystemImage)
-                .foregroundStyle(.secondary)
-                .font(.system(size: 13))
-            Text("AppVolume")
-                .font(.system(size: 13, weight: .semibold))
-            Spacer()
-            if store.hasActiveControls {
-                Button("全部恢复") {
-                    store.releaseAllControls()
-                }
-                .buttonStyle(.borderless)
-                .font(.system(size: 10))
-            }
-            if let date = store.lastRefresh {
-                Text(date, style: .time)
-                    .font(.system(size: 9))
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(store.needsScreenRecordingPermission ? .orange : .blue)
+                .frame(width: 24, height: 24)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text("AppVolume")
+                    .font(.headline)
+                Text(store.apps.isEmpty ? "没有可控制的应用" : "\(store.apps.count) 个音频应用")
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
+
+            Spacer()
+
+            if store.hasActiveControls {
+                Button {
+                    store.releaseAllControls()
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                }
+                .buttonStyle(.borderless)
+                .help("全部恢复默认")
+            }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 4)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
     }
 
     private var appList: some View {
         Group {
             if store.apps.isEmpty {
-                Text("当前没有检测到音频 App\n播放音乐或视频后再打开")
-                    .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
+                ContentUnavailableView {
+                    Label("没有音频应用", systemImage: "speaker.slash")
+                } description: {
+                    Text("打开浏览器、音乐或视频应用后会显示在这里")
+                }
+                .frame(maxWidth: .infinity, minHeight: 112)
             } else {
-                VStack(spacing: 0) {
-                    ForEach(store.apps) { app in
-                        AppRowView(app: app)
-                        if app.id != store.apps.last?.id {
-                            Divider().padding(.leading, 32)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("应用音量")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 12)
+                        .padding(.top, 7)
+                        .padding(.bottom, 3)
+
+                    VStack(spacing: 0) {
+                        ForEach(store.apps) { app in
+                            AppRowView(app: app)
+                            if app.id != store.apps.last?.id {
+                                Divider().padding(.leading, 46)
+                            }
                         }
                     }
                 }
@@ -75,9 +90,9 @@ struct MenuBarView: View {
     }
 
     private var footer: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 7) {
             Text(store.statusNote)
-                .font(.system(size: 9))
+                .font(.caption)
                 .foregroundStyle(store.needsScreenRecordingPermission ? .orange : .secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
@@ -94,7 +109,6 @@ struct MenuBarView: View {
                     openSettings()
                 } label: {
                     Image(systemName: "gearshape")
-                        .font(.system(size: 12))
                 }
                 .buttonStyle(.borderless)
                 .help("打开设置")
@@ -103,15 +117,13 @@ struct MenuBarView: View {
                     NSApplication.shared.terminate(nil)
                 } label: {
                     Image(systemName: "power")
-                        .font(.system(size: 12))
                 }
                 .buttonStyle(.borderless)
                 .help("退出")
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.top, 4)
-        .padding(.bottom, 2)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
     }
 
     private func openSettings() {
