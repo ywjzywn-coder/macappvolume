@@ -20,7 +20,7 @@ xcodebuild \
   CLANG_ENABLE_CODE_COVERAGE=NO \
   GCC_GENERATE_TEST_COVERAGE_FILES=NO \
   GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=NO \
-  CODE_SIGN_IDENTITY="-" \
+  CODE_SIGNING_ALLOWED=NO \
   build
 
 if [[ ! -d "$PRODUCT" ]]; then
@@ -33,6 +33,7 @@ if [[ -d "$PRODUCT/Contents/PlugIns" ]] || [[ -d "$PRODUCT/Contents/Frameworks/X
   exit 1
 fi
 
+codesign --force --deep --sign - --options runtime "$PRODUCT"
 codesign --verify --deep --strict "$PRODUCT"
 ditto -c -k --sequesterRsrc --keepParent "$PRODUCT" "$ARCHIVE"
 

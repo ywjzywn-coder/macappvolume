@@ -1,4 +1,4 @@
-# AppVolume 0.1.0
+# AppVolume 0.1.1
 
 首个公开测试版本。
 
@@ -19,7 +19,7 @@
 
 ## 安装
 
-1. 下载并解压 `AppVolume-0.1.0.zip`。
+1. 下载并解压 `AppVolume-v0.1.1.zip`。
 2. 将 `AppVolume.app` 移到“应用程序”文件夹。
 3. 首次打开如果被 Gatekeeper 阻止，请在 Finder 中右键 App，选择“打开”。
 4. 从菜单栏的推子图标进入 AppVolume。
