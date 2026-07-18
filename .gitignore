@@ -5,6 +5,7 @@ xcuserdata/
 DerivedData/
 build/
 dist/
+!release-assets/
 *.moved-aside
 *.pbxuser
 !default.pbxuser
